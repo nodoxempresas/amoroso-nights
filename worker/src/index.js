@@ -1,0 +1,129 @@
+/**
+ * Relays the amorosonights.com lead form to Telegram.
+ *
+ * The site is static (GitHub Pages), so it cannot hold the bot token — anything
+ * in the page is public. This Worker holds it as a secret instead and is the
+ * only thing that talks to Telegram.
+ *
+ * Secrets (set with `wrangler secret put <NAME>`, never committed):
+ *   TELEGRAM_BOT_TOKEN  from @BotFather
+ *   TELEGRAM_CHAT_ID    destination chat (from @userinfobot, or the group id)
+ */
+
+const MAX_FIELD = 600; // Telegram caps messages at 4096 chars; keep well under.
+const RATE_MAX = 5; // submissions per IP...
+const RATE_WINDOW = 600; // ...per this many seconds.
+
+const FIELDS = [
+  ['name', 'Nombre'],
+  ['whatsapp', 'WhatsApp'],
+  ['email', 'Email'],
+  ['city', 'Ciudad'],
+  ['date', 'Fecha tentativa'],
+  ['groupSize', 'Personas'],
+  ['occasion', 'Motivo'],
+  ['vibe', 'Estilo'],
+  ['avoid', 'Qué evitar'],
+];
+
+const esc = (s) =>
+  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function corsHeaders(request, env) {
+  const allowed = (env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
+  const origin = request.headers.get('Origin') || '';
+  const headers = {
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '86400',
+    Vary: 'Origin',
+  };
+  if (allowed.includes(origin)) headers['Access-Control-Allow-Origin'] = origin;
+  return headers;
+}
+
+const json = (body, status, extra) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json', ...extra },
+  });
+
+/**
+ * Per-IP throttle via the Cache API — no KV namespace to provision and no
+ * write quota to exhaust during the flood it exists to stop. Cache is per-colo,
+ * so a distributed botnet can beat it; it's here for the common single-source
+ * case. Each write refreshes the TTL, so a persistent spammer stays blocked.
+ */
+async function rateLimited(ip) {
+  const key = new Request(`https://ratelimit.invalid/${encodeURIComponent(ip)}`);
+  const cache = caches.default;
+  const hit = await cache.match(key);
+  const n = hit ? parseInt(await hit.text(), 10) || 0 : 0;
+  if (n >= RATE_MAX) return true;
+  await cache.put(
+    key,
+    new Response(String(n + 1), { headers: { 'Cache-Control': `max-age=${RATE_WINDOW}` } })
+  );
+  return false;
+}
+
+export default {
+  async fetch(request, env) {
+    const cors = corsHeaders(request, env);
+
+    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+    if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405, cors);
+    if (!cors['Access-Control-Allow-Origin']) return json({ error: 'forbidden_origin' }, 403, cors);
+
+    if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
+      console.error('missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID secret');
+      return json({ error: 'server_misconfigured' }, 500, cors);
+    }
+
+    let data;
+    try {
+      data = await request.json();
+    } catch {
+      return json({ error: 'bad_json' }, 400, cors);
+    }
+
+    // Honeypot: hidden field no human ever sees. Report success so the bot
+    // has no signal to retry against.
+    if (data.website) return json({ ok: true }, 200, cors);
+
+    if (!data.name || !data.whatsapp || !data.city) {
+      return json({ error: 'missing_required_fields' }, 400, cors);
+    }
+
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    if (await rateLimited(ip)) return json({ error: 'rate_limited' }, 429, cors);
+
+    const lines = ['<b>🌙 Nueva solicitud — Amoroso Nights</b>', ''];
+    for (const [key, label] of FIELDS) {
+      const v = (data[key] ?? '').toString().trim().slice(0, MAX_FIELD);
+      if (v) lines.push(`<b>${label}:</b> ${esc(v)}`);
+    }
+    lines.push('');
+    lines.push(`Mayores de edad: ${data.adultsConfirmed ? '✅' : '❌'}`);
+    lines.push(`Acepta términos: ${data.legalConfirmed ? '✅' : '❌'}`);
+
+    const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: env.TELEGRAM_CHAT_ID,
+        text: lines.join('\n'),
+        parse_mode: 'HTML',
+        disable_web_page_preview: true,
+      }),
+    });
+
+    if (!res.ok) {
+      // Never echo Telegram's body to the client — it can quote the token back.
+      console.error('telegram sendMessage failed', res.status, await res.text());
+      return json({ error: 'delivery_failed' }, 502, cors);
+    }
+
+    return json({ ok: true }, 200, cors);
+  },
+};

@@ -23,3 +23,7 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+
+# Cloudflare Worker local secrets — never commit
+worker/.dev.vars
+worker/.wrangler/

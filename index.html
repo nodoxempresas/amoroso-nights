@@ -658,15 +658,21 @@ window.__resources = {
         </div>
 
         <label style="display:flex; gap:11px; align-items:flex-start; font-size:13.5px; color:var(--ink-mute,#6f655a); line-height:1.45; cursor:pointer;">
-          <input type="checkbox" required="" style="margin-top:2px; accent-color:var(--wine,#7d2a3a); width:16px; height:16px;">
+          <input type="checkbox" name="adultsConfirmed" required="" style="margin-top:2px; accent-color:var(--wine,#7d2a3a); width:16px; height:16px;">
           <span>Confirmo que todos los participantes serán mayores de edad.</span>
         </label>
         <label style="display:flex; gap:11px; align-items:flex-start; font-size:13.5px; color:var(--ink-mute,#6f655a); line-height:1.45; cursor:pointer;">
-          <input type="checkbox" required="" style="margin-top:2px; accent-color:var(--wine,#7d2a3a); width:16px; height:16px;">
+          <input type="checkbox" name="legalConfirmed" required="" style="margin-top:2px; accent-color:var(--wine,#7d2a3a); width:16px; height:16px;">
           <span>Acepto que Amoroso Nights no coordina servicios sexuales, drogas ni actividades ilegales.</span>
         </label>
 
-        <button type="submit" style="margin-top:6px; border:none; cursor:pointer; color:var(--bg,#f4efe5); background:var(--ink,#241d18); padding:17px 24px; border-radius:8px; font-size:16px; font-weight:600; box-shadow:0 14px 30px -14px rgba(36,29,24,0.5); font-family:inherit;">Solicitar propuesta privada</button>
+        <!-- Honeypot: hidden from humans, bots fill it in and get silently dropped. -->
+        <div style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+          <label for="an-website">No llenar</label>
+          <input id="an-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <button type="submit" style="margin-top:6px; border:none; cursor:pointer; color:var(--bg,#f4efe5); background:var(--ink,#241d18); padding:17px 24px; border-radius:8px; font-size:16px; font-weight:600; box-shadow:0 14px 30px -14px rgba(36,29,24,0.5); font-family:inherit;">{{ submitLabel }}</button>
         <p style="margin:0; text-align:center; font-size:12.5px; color:var(--ink-faint,#a89a89);">Respondemos con los siguientes pasos en menos de 24 h. Sin precios públicos; cada ruta se revisa caso por caso.</p>
       </form>
     </div>
@@ -694,12 +700,17 @@ window.__resources = {
   </footer>
 
   <!-- TOAST -->
-  <div style="{{ toastStyle }}">Solicitud simulada. Conecta este formulario a WhatsApp, CRM o email.</div>
+  <div style="{{ toastStyle }}">{{ toastText }}</div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:900},&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Emerald Smoke&quot;,&quot;options&quot;:[&quot;Amber Noir&quot;,&quot;Midnight Sapphire&quot;,&quot;Emerald Smoke&quot;,&quot;Oxblood Velvet&quot;,&quot;Onyx Platinum&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
-  state = { toast: false };
+  // Cloudflare Worker that relays the form to Telegram. Only the endpoint is
+  // public; the bot token lives as a secret on the Worker (see worker/README.md).
+  // Replace <TU-SUBDOMINIO> with the value `wrangler deploy` prints.
+  static FORM_ENDPOINT = 'https://amoroso-nights-form.<TU-SUBDOMINIO>.workers.dev';
+
+  state = { toast: false, sending: false };
   galleryRef = React.createRef();
 
   static PALETTES = {
@@ -756,14 +767,46 @@ class Component extends DCLogic {
       galleryRef: this.galleryRef,
       scrollPrev: () => scroll(-700),
       scrollNext: () => scroll(700),
-      onSubmit: (e) => {
+      onSubmit: async (e) => {
         e.preventDefault();
-        this.setState({ toast: true });
+        if (this.state.sending) return;
+        const form = e.target;
+        const fd = new FormData(form);
+        const data = Object.fromEntries(fd.entries());
+        // Unchecked boxes are absent from FormData; send them as real booleans.
+        data.adultsConfirmed = fd.get('adultsConfirmed') != null;
+        data.legalConfirmed = fd.get('legalConfirmed') != null;
+
+        this.setState({ sending: true });
         clearTimeout(this._t);
-        this._t = setTimeout(() => this.setState({ toast: false }), 4500);
+        try {
+          const res = await fetch(Component.FORM_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          form.reset();
+          this.setState({ toast: 'ok' });
+        } catch (err) {
+          console.error('[form] envío falló:', err);
+          this.setState({ toast: 'err' });
+        } finally {
+          this.setState({ sending: false });
+          this._t = setTimeout(() => this.setState({ toast: false }), 6000);
+        }
       },
+      submitLabel: this.state.sending ? 'Enviando...' : 'Solicitar propuesta privada',
+      toastText: this.state.toast === 'err'
+        ? 'No se pudo enviar. Escríbenos por WhatsApp o intenta de nuevo.'
+        : 'Solicitud enviada. Te respondemos en menos de 24 h.',
       toastStyle: this.state.toast
-        ? { ...base, transform: 'translateX(-50%) translateY(0)', opacity: 1 }
+        ? {
+            ...base,
+            background: this.state.toast === 'err' ? 'var(--wine,#7d2a3a)' : 'var(--ink,#241d18)',
+            transform: 'translateX(-50%) translateY(0)',
+            opacity: 1
+          }
         : base
     };
   }

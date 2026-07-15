@@ -1,0 +1,14 @@
+name = "amoroso-nights-form"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# Origins allowed to POST the form. Anything else gets a 403.
+# localhost is here so the form can be tested before deploying the site.
+[vars]
+ALLOWED_ORIGINS = "https://amorosonights.com,https://www.amorosonights.com,http://localhost:8777"
+
+# TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID are NOT here on purpose.
+# They are secrets — set them with:
+#   wrangler secret put TELEGRAM_BOT_TOKEN
+#   wrangler secret put TELEGRAM_CHAT_ID
+# Anything in this file is committed to a public repo.
