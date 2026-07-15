@@ -343,12 +343,25 @@ window.__resources = {
     </div>
 
     <div ref="{{ galleryRef }}" class="an-scroll" style="margin-top:36px; display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px max(24px,calc((100vw - 1180px)/2 + 24px)) 22px;">
-      <image-slot id="gal-1" shape="rounded" radius="12" placeholder="Foto: precopeo / cena" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;"></image-slot>
-      <image-slot id="gal-2" shape="rounded" radius="12" placeholder="Foto: la mesa / VIP" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;"></image-slot>
-      <image-slot id="gal-3" shape="rounded" radius="12" placeholder="Foto: table dance / show" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;"></image-slot>
-      <image-slot id="gal-4" shape="rounded" radius="12" placeholder="Foto: antro / pista" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;"></image-slot>
-      <image-slot id="gal-5" shape="rounded" radius="12" placeholder="Foto: el grupo" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;"></image-slot>
-      <image-slot id="gal-6" shape="rounded" radius="12" placeholder="Foto: after / cierre" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;"></image-slot>
+      <picture style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;">
+        <source type="image/webp" srcset="img/amoroso-night-despedidas-soltero6.webp">
+        <img src="img/amoroso-night-despedidas-soltero6.jpg" width="330" height="440" loading="lazy" decoding="async" alt="El novio con velo de broma brindando con sus amigos en la cena previa a la despedida de soltero" style="display:block; width:100%; height:100%; object-fit:cover; border-radius:12px;">
+      </picture>
+      <picture style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;">
+        <source type="image/webp" srcset="img/amoroso-night-despedidas-soltero1.webp">
+        <img src="img/amoroso-night-despedidas-soltero1.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo de amigos brindando en la mesa VIP de un antro, con hielera y botellas" style="display:block; width:100%; height:100%; object-fit:cover; border-radius:12px;">
+      </picture>
+      <!-- Faltan fotos de "table dance / show" y "el grupo" (noche real en CDMX/MTY/TIJ).
+           Cuando las tengas: optimízalas a img/ y agrega otro bloque <picture> aquí,
+           con el mismo formato que los de abajo. -->
+      <picture style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;">
+        <source type="image/webp" srcset="img/amoroso-night-despedidas-soltero5.webp">
+        <img src="img/amoroso-night-despedidas-soltero5.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Pista de antro llena con confeti, luces y esfera de espejos durante la noche" style="display:block; width:100%; height:100%; object-fit:cover; border-radius:12px;">
+      </picture>
+      <picture style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;">
+        <source type="image/webp" srcset="img/amoroso-night-despedidas-soltero3.webp">
+        <img src="img/amoroso-night-despedidas-soltero3.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo brindando con champaña dentro de una limusina camino al antro" style="display:block; width:100%; height:100%; object-fit:cover; border-radius:12px;">
+      </picture>
     </div>
   </section>
 
