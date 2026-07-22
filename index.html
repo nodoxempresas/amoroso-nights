@@ -231,7 +231,6 @@ window.__resources = {
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 </style>
-<script src="assets/image-slot.js"></script>
 <style>
   *{box-sizing:border-box;}
   body{margin:0;background:var(--bg,#f4efe5);}
@@ -240,6 +239,8 @@ window.__resources = {
   input,select,textarea{font-family:inherit;}
   .an-brand-logo{display:block; width:124px; height:70px; object-fit:contain;}
   .an-brand-logo-footer{width:154px; height:86px; padding:8px 10px; border-radius:8px; background:var(--bg,#f4efe5);}
+  .an-photo-frame{display:block; overflow:hidden;}
+  .an-photo-frame>img{display:block; width:100%; height:100%; object-fit:cover;}
   .an-scroll::-webkit-scrollbar{height:8px;}
   .an-scroll::-webkit-scrollbar-thumb{background:rgba(36,29,24,0.2);border-radius:99px;}
   .an-scroll::-webkit-scrollbar-track{background:transparent;}
@@ -247,7 +248,7 @@ window.__resources = {
      so they match React's runtime CSSOM serialization, e.g. "columns: 1fr 1fr") --- */
   @media (max-width:768px){
     html,body{overflow-x:hidden !important;}
-    img,video,image-slot{max-width:100% !important;}
+    img,video,picture{max-width:100% !important;}
     /* Collapse every hard multi-column grid to a single column */
     [style*="1fr 1fr"],
     [style*="0.9fr 1.1fr"],
@@ -305,7 +306,10 @@ window.__resources = {
 
   <!-- HERO BANNER (full-bleed photo) -->
   <section id="top" style="position:relative; min-height:clamp(600px,90vh,880px); display:flex; align-items:flex-end; overflow:hidden; background:var(--plum,#271a22);">
-    <image-slot id="hero-banner" shape="rect" placeholder="Banner: la mejor noche del grupo" style="position:absolute; inset:0; width:100%; height:100%;"></image-slot>
+    <picture class="an-photo-frame" style="position:absolute; inset:0; width:100%; height:100%;">
+      <source type="image/webp" srcset="img/amoroso-night-fotos12.webp">
+      <img src="img/amoroso-night-fotos12.jpg" width="880" height="880" loading="eager" fetchpriority="high" decoding="async" alt="">
+    </picture>
     <div style="position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(20,12,16,0.30) 0%, rgba(20,12,16,0.40) 40%, rgba(20,12,16,0.90) 100%);"></div>
     <div style="position:relative; pointer-events:none; max-width:1180px; margin:0 auto; padding:64px 24px 78px; width:100%;">
       <p style="margin:0 0 24px; display:inline-flex; align-items:center; gap:12px; color:var(--gold,#e7c178); font-size:12px; letter-spacing:0.24em; text-transform:uppercase; font-weight:600;"><span style="width:30px; height:1px; background:var(--gold,#e7c178);"></span>Despedidas de soltero · México</p>
@@ -342,24 +346,65 @@ window.__resources = {
     </div>
 
     <div ref="{{ galleryRef }}" class="an-scroll" style="margin-top:36px; display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px max(24px,calc((100vw - 1180px)/2 + 24px)) 22px;">
-      <picture style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;">
-        <source type="image/webp" srcset="img/amoroso-night-despedidas-soltero6.webp">
-        <img src="img/amoroso-night-despedidas-soltero6.jpg" width="330" height="440" loading="lazy" decoding="async" alt="El novio con velo de broma brindando con sus amigos en la cena previa a la despedida de soltero" style="display:block; width:100%; height:100%; object-fit:cover; border-radius:12px;">
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos12.webp">
+        <img src="img/amoroso-night-fotos12.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Novio cubierto de confeti celebrando dentro de la camioneta con sus amigos">
       </picture>
-      <picture style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;">
-        <source type="image/webp" srcset="img/amoroso-night-despedidas-soltero1.webp">
-        <img src="img/amoroso-night-despedidas-soltero1.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo de amigos brindando en la mesa VIP de un antro, con hielera y botellas" style="display:block; width:100%; height:100%; object-fit:cover; border-radius:12px;">
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos7.webp">
+        <img src="img/amoroso-night-fotos7.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo de amigos tomándose una selfie en el antro durante la despedida">
       </picture>
-      <!-- Faltan fotos de "table dance / show" y "el grupo" (noche real en CDMX/MTY/TIJ).
-           Cuando las tengas: optimízalas a img/ y agrega otro bloque <picture> aquí,
-           con el mismo formato que los de abajo. -->
-      <picture style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;">
-        <source type="image/webp" srcset="img/amoroso-night-despedidas-soltero5.webp">
-        <img src="img/amoroso-night-despedidas-soltero5.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Pista de antro llena con confeti, luces y esfera de espejos durante la noche" style="display:block; width:100%; height:100%; object-fit:cover; border-radius:12px;">
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos6.webp">
+        <img src="img/amoroso-night-fotos6.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Novio con lentes de fiesta sosteniendo champaña junto a su amigo">
       </picture>
-      <picture style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start;">
-        <source type="image/webp" srcset="img/amoroso-night-despedidas-soltero3.webp">
-        <img src="img/amoroso-night-despedidas-soltero3.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo brindando con champaña dentro de una limusina camino al antro" style="display:block; width:100%; height:100%; object-fit:cover; border-radius:12px;">
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos10.webp">
+        <img src="img/amoroso-night-fotos10.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Amigos brindando con cervezas en una mesa antes de salir">
+      </picture>
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos3.webp">
+        <img src="img/amoroso-night-fotos3.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo bailando y brindando en un club con luces de noche">
+      </picture>
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos1.webp">
+        <img src="img/amoroso-night-fotos1.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Ambiente de club con gente celebrando frente al escenario">
+      </picture>
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos14.webp">
+        <img src="img/amoroso-night-fotos14.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo brindando durante una cena privada antes del antro">
+      </picture>
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos15.webp">
+        <img src="img/amoroso-night-fotos15.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Invitado vestido para la fiesta caminando por la ciudad de noche">
+      </picture>
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos2.webp">
+        <img src="img/amoroso-night-fotos2.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Personas cantando y bailando en una noche de antro">
+      </picture>
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos13.webp">
+        <img src="img/amoroso-night-fotos13.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo de amigos brindando con cerveza en una mesa">
+      </picture>
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos9.webp">
+        <img src="img/amoroso-night-fotos9.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Amigos brindando con vino en restaurante durante el precopeo">
+      </picture>
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos8.webp">
+        <img src="img/amoroso-night-fotos8.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Manos sirviendo shots en una barra antes de la salida">
+      </picture>
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos5.webp">
+        <img src="img/amoroso-night-fotos5.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo de amigos caminando juntos durante un viaje privado">
+      </picture>
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos4.webp">
+        <img src="img/amoroso-night-fotos4.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Amigos sentados frente al paisaje durante un viaje de grupo">
+      </picture>
+      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
+        <source type="image/webp" srcset="img/amoroso-night-fotos11.webp">
+        <img src="img/amoroso-night-fotos11.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo celebrando al novio con bebidas durante una reunión previa">
       </picture>
     </div>
   </section>
@@ -387,7 +432,10 @@ window.__resources = {
 
       <!-- Featured despedida -->
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:0; background:var(--plum,#271a22); border:1px solid rgba(160,106,44,0.4); border-radius:14px; overflow:hidden; box-shadow:0 40px 80px -50px rgba(39,26,34,0.9); margin-bottom:18px;">
-        <image-slot id="exp-despedida" shape="rect" placeholder="Foto: despedida de soltero" style="width:100%; min-height:440px;"></image-slot>
+        <picture class="an-photo-frame" style="width:100%; height:100%; min-height:440px;">
+          <source type="image/webp" srcset="img/amoroso-night-fotos6.webp">
+          <img src="img/amoroso-night-fotos6.jpg" width="880" height="880" loading="lazy" decoding="async" alt="Novio con lentes de fiesta sosteniendo champaña antes de salir">
+        </picture>
         <div style="padding:clamp(30px,4vw,52px); display:flex; flex-direction:column; justify-content:center;">
           <span style="align-self:flex-start; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--plum,#271a22); background:var(--gold,#e7c178); padding:5px 12px; border-radius:99px; font-weight:700; margin-bottom:20px;">Más pedido</span>
           <h3 style="margin:0 0 14px; font-family:'Newsreader',serif; font-weight:500; font-size:clamp(28px,3vw,38px); line-height:1.05; color:var(--paper,#f7eee6);">Despedidas de soltero</h3>
@@ -405,14 +453,20 @@ window.__resources = {
       <!-- Secondary experiences -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:18px;">
         <article style="border:1px solid rgba(36,29,24,0.1); border-radius:14px; background:var(--card,#fbf8f1); overflow:hidden;">
-          <image-slot id="exp-cumple" shape="rect" placeholder="Foto: cumpleaños" style="width:100%; height:210px;"></image-slot>
+          <picture class="an-photo-frame" style="width:100%; height:210px;">
+            <source type="image/webp" srcset="img/amoroso-night-fotos13.webp">
+            <img src="img/amoroso-night-fotos13.jpg" width="880" height="880" loading="lazy" decoding="async" alt="Grupo brindando con cervezas en una celebración privada">
+          </picture>
           <div style="padding:28px;">
             <h3 style="margin:0 0 10px; font-family:'Newsreader',serif; font-weight:500; font-size:24px; color:var(--ink,#241d18);">Cumpleaños privados</h3>
             <p style="margin:0; font-size:15px; line-height:1.55; color:var(--ink-mute,#6f655a);">Celebraciones con una ruta diseñada alrededor del estilo del festejado: restaurante, antro y after.</p>
           </div>
         </article>
         <article style="border:1px solid rgba(36,29,24,0.1); border-radius:14px; background:var(--card,#fbf8f1); overflow:hidden;">
-          <image-slot id="exp-viaje" shape="rect" placeholder="Foto: viaje de amigos" style="width:100%; height:210px;"></image-slot>
+          <picture class="an-photo-frame" style="width:100%; height:210px;">
+            <source type="image/webp" srcset="img/amoroso-night-fotos4.webp">
+            <img src="img/amoroso-night-fotos4.jpg" width="880" height="880" loading="lazy" decoding="async" alt="Grupo de amigos disfrutando un paisaje durante un viaje">
+          </picture>
           <div style="padding:28px;">
             <h3 style="margin:0 0 10px; font-family:'Newsreader',serif; font-weight:500; font-size:24px; color:var(--ink,#241d18);">Viajes de amigos</h3>
             <p style="margin:0; font-size:15px; line-height:1.55; color:var(--ink-mute,#6f655a);">Para grupos que visitan otra ciudad y quieren saber exactamente dónde hospedarse, moverse y salir.</p>
@@ -424,7 +478,10 @@ window.__resources = {
 
   <!-- FULL-BLEED IMAGE QUOTE BAND -->
   <section style="position:relative; min-height:clamp(380px,56vh,560px); display:flex; align-items:center; overflow:hidden; background:var(--plum,#271a22);">
-    <image-slot id="band-mid" shape="rect" placeholder="Foto ancha: ambiente nocturno premium" style="position:absolute; inset:0; width:100%; height:100%;"></image-slot>
+    <picture class="an-photo-frame" style="position:absolute; inset:0; width:100%; height:100%;">
+      <source type="image/webp" srcset="img/amoroso-night-fotos3.webp">
+      <img src="img/amoroso-night-fotos3.jpg" width="880" height="880" loading="lazy" decoding="async" alt="">
+    </picture>
     <div style="position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg, rgba(20,12,16,0.85) 0%, rgba(20,12,16,0.55) 60%, rgba(20,12,16,0.4) 100%);"></div>
     <div style="position:relative; pointer-events:none; max-width:1180px; margin:0 auto; padding:64px 24px; width:100%;">
       <p style="margin:0; max-width:760px; font-family:'Newsreader',serif; font-style:italic; font-weight:400; font-size:clamp(26px,3.4vw,42px); line-height:1.25; color:var(--paper,#f7eee6); text-wrap:balance;">"La diferencia entre una buena noche y una historia que se cuenta por años está en los detalles."</p>
@@ -474,7 +531,10 @@ window.__resources = {
 
       <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px;">
         <div style="grid-row:span 2; border:1px solid rgba(36,29,24,0.1); border-radius:12px; overflow:hidden; background:var(--card,#fbf8f1); box-shadow:0 30px 60px -42px rgba(36,29,24,0.4);">
-          <image-slot id="review-1" shape="rect" placeholder="Foto/video: la noche del grupo" style="width:100%; height:300px;"></image-slot>
+          <picture class="an-photo-frame" style="width:100%; height:300px;">
+            <source type="image/webp" srcset="img/amoroso-night-fotos7.webp">
+            <img src="img/amoroso-night-fotos7.jpg" width="880" height="880" loading="lazy" decoding="async" alt="Grupo de amigos celebrando en el antro durante una noche privada">
+          </picture>
           <div style="padding:26px;">
             <div style="color:var(--copper,#a06a2c); letter-spacing:0.08em; margin-bottom:12px;">★★★★★</div>
             <p style="margin:0 0 18px; font-family:'Newsreader',serif; font-size:19px; line-height:1.45; color:var(--ink,#2e261f);">"Despedida de 9 en CDMX. No tuvimos que pensar en nada: cena, antro y transporte cuadrados. La mejor noche que hemos armado."</p>
@@ -517,7 +577,10 @@ window.__resources = {
     </div>
     <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px;">
       <article style="position:relative; border-radius:12px; overflow:hidden; min-height:360px; display:flex; flex-direction:column; justify-content:flex-end; border:1px solid rgba(36,29,24,0.12);">
-        <image-slot id="city-cdmx" shape="rect" placeholder="Foto: CDMX" style="position:absolute; inset:0; width:100%; height:100%;"></image-slot>
+        <picture class="an-photo-frame" style="position:absolute; inset:0; width:100%; height:100%;">
+          <source type="image/webp" srcset="img/amoroso-night-fotos15.webp">
+          <img src="img/amoroso-night-fotos15.jpg" width="880" height="880" loading="lazy" decoding="async" alt="">
+        </picture>
         <div style="position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(20,12,16,0) 35%, rgba(20,12,16,0.9) 100%);"></div>
         <div style="position:relative; pointer-events:none; padding:28px;">
           <h3 style="margin:0 0 8px; font-family:'Newsreader',serif; font-weight:500; font-size:28px; color:var(--paper,#f7eee6);">CDMX</h3>
@@ -525,7 +588,10 @@ window.__resources = {
         </div>
       </article>
       <article style="position:relative; border-radius:12px; overflow:hidden; min-height:360px; display:flex; flex-direction:column; justify-content:flex-end; border:1px solid rgba(36,29,24,0.12);">
-        <image-slot id="city-mty" shape="rect" placeholder="Foto: Monterrey" style="position:absolute; inset:0; width:100%; height:100%;"></image-slot>
+        <picture class="an-photo-frame" style="position:absolute; inset:0; width:100%; height:100%;">
+          <source type="image/webp" srcset="img/amoroso-night-fotos14.webp">
+          <img src="img/amoroso-night-fotos14.jpg" width="880" height="880" loading="lazy" decoding="async" alt="">
+        </picture>
         <div style="position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(20,12,16,0) 35%, rgba(20,12,16,0.9) 100%);"></div>
         <div style="position:relative; pointer-events:none; padding:28px;">
           <h3 style="margin:0 0 8px; font-family:'Newsreader',serif; font-weight:500; font-size:28px; color:var(--paper,#f7eee6);">Monterrey</h3>
@@ -533,7 +599,10 @@ window.__resources = {
         </div>
       </article>
       <article style="position:relative; border-radius:12px; overflow:hidden; min-height:360px; display:flex; flex-direction:column; justify-content:flex-end; border:1px solid rgba(36,29,24,0.12);">
-        <image-slot id="city-tj" shape="rect" placeholder="Foto: Tijuana" style="position:absolute; inset:0; width:100%; height:100%;"></image-slot>
+        <picture class="an-photo-frame" style="position:absolute; inset:0; width:100%; height:100%;">
+          <source type="image/webp" srcset="img/amoroso-night-fotos8.webp">
+          <img src="img/amoroso-night-fotos8.jpg" width="880" height="880" loading="lazy" decoding="async" alt="">
+        </picture>
         <div style="position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(20,12,16,0) 35%, rgba(20,12,16,0.9) 100%);"></div>
         <div style="position:relative; pointer-events:none; padding:28px;">
           <h3 style="margin:0 0 8px; font-family:'Newsreader',serif; font-weight:500; font-size:28px; color:var(--paper,#f7eee6);">Tijuana</h3>
