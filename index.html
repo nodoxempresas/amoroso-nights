@@ -260,8 +260,8 @@ window.__resources = {
   .an-date-wrap{position:relative;}
   .an-date-display{-webkit-tap-highlight-color:transparent;}
   .an-date-display:focus{outline:none;box-shadow:none;}
-  .an-calendar{position:absolute;top:calc(100% + 8px);right:0;z-index:20;width:min(292px,calc(100vw - 48px));padding:14px;background:var(--card,#fbf8f1);border:1px solid rgba(36,29,24,0.14);border-radius:10px;box-shadow:0 18px 40px -20px rgba(36,29,24,0.55);}
-  .an-calendar[hidden]{display:none;}
+  .an-calendar{display:none;position:absolute;top:calc(100% + 8px);right:0;z-index:20;width:min(292px,calc(100vw - 48px));padding:14px;background:var(--card,#fbf8f1);border:1px solid rgba(36,29,24,0.14);border-radius:10px;box-shadow:0 18px 40px -20px rgba(36,29,24,0.55);}
+  .an-calendar.is-open{display:block;}
   .an-calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:var(--ink,#241d18);font-size:14px;font-weight:600;}
   .an-calendar-nav{width:30px;height:30px;border:0;border-radius:6px;background:transparent;color:var(--ink-soft,#4f463d);font-size:20px;line-height:1;cursor:pointer;}
   .an-calendar-nav:hover,.an-calendar-nav:focus-visible{background:var(--bg-warm,#efe7d8);outline:none;}
@@ -1008,9 +1008,9 @@ class Component extends DCLogic {
       html += '</div>';
       panel.innerHTML = html;
     }
-    function close(){ panel.hidden = true; display.setAttribute('aria-expanded','false'); }
+    function close(){ panel.hidden = true; panel.classList.remove('is-open'); display.setAttribute('aria-expanded','false'); }
     display.setAttribute('aria-expanded','false');
-    display.addEventListener('click', function(){ panel.hidden = !panel.hidden; display.setAttribute('aria-expanded', String(!panel.hidden)); if (!panel.hidden) render(); });
+    display.addEventListener('click', function(){ var open = panel.hidden || !panel.classList.contains('is-open'); panel.hidden = !open; panel.classList.toggle('is-open', open); display.setAttribute('aria-expanded', String(open)); if (open) render(); });
     panel.addEventListener('click', function(e){
       var nav = e.target.closest('[data-cal]');
       if (nav){ view.setMonth(view.getMonth() + (nav.dataset.cal === 'next' ? 1 : -1)); render(); return; }
@@ -1020,6 +1020,7 @@ class Component extends DCLogic {
     document.addEventListener('click', function(e){ if (!panel.parentNode.contains(e.target)) close(); });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
     render();
+    close();
   }
   setTimeout(initDatePicker, 450);
   setTimeout(initDatePicker, 1000);
