@@ -778,7 +778,7 @@ class Component extends DCLogic {
   // Cloudflare Worker that relays the form to Telegram. Only the endpoint is
   // public; the bot token lives as a secret on the Worker (see worker/README.md).
   // Replace <TU-SUBDOMINIO> with the value `wrangler deploy` prints.
-  static FORM_ENDPOINT = 'https://amoroso-nights-form.<TU-SUBDOMINIO>.workers.dev';
+  static FORM_ENDPOINT = 'https://amoroso-nights-form.amoroso-nights.workers.dev';
 
   state = { toast: false, sending: false };
   galleryRef = React.createRef();
