@@ -37,7 +37,7 @@ npx wrangler deploy
 ### 4. Cargar los secretos
 
 ```sh
-npx wrangler secret put TELEGRAM_BOT_TOKEN   # pega el token de BotFather
+npx wrangler secret put TELEGRAM_BOT_TOKEN   # pega el token de BotFather, sin comillas
 npx wrangler secret put TELEGRAM_CHAT_ID     # pega el chat_id
 ```
 
@@ -62,7 +62,7 @@ npx wrangler tail    # logs en vivo del Worker
 
 - **Honeypot** — campo `website` oculto. Si viene lleno, es bot: responde 200
   (para no darle señal) y no manda nada.
-- **Rate limit** — 5 envíos por IP cada 10 min, vía Cache API.
+- **Rate limit** — 20 envíos por IP cada 10 min, vía Cache API.
   Es por centro de datos, así que una botnet distribuida lo puede esquivar;
   sirve para el caso común de un solo origen. Si empieza a llegar spam real,
   el siguiente paso es Cloudflare Turnstile.

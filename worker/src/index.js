@@ -11,7 +11,7 @@
  */
 
 const MAX_FIELD = 600; // Telegram caps messages at 4096 chars; keep well under.
-const RATE_MAX = 5; // submissions per IP...
+const RATE_MAX = 20; // submissions per IP...
 const RATE_WINDOW = 600; // ...per this many seconds.
 
 const FIELDS = [
@@ -48,6 +48,13 @@ const json = (body, status, extra) =>
     headers: { 'Content-Type': 'application/json', ...extra },
   });
 
+function normalizeBotToken(value) {
+  const token = String(value || '').trim();
+  const fromBotUrl = token.match(/(?:^|\/)bot(\d+:[A-Za-z0-9_-]+)/i);
+  const rawToken = token.match(/(\d+:[A-Za-z0-9_-]+)/);
+  return (fromBotUrl || rawToken)?.[1] || token;
+}
+
 /**
  * Per-IP throttle via the Cache API — no KV namespace to provision and no
  * write quota to exhaust during the flood it exists to stop. Cache is per-colo,
@@ -80,6 +87,12 @@ export default {
       return json({ error: 'server_misconfigured' }, 500, cors);
     }
 
+    const botToken = normalizeBotToken(env.TELEGRAM_BOT_TOKEN);
+    if (!/^\d+:[A-Za-z0-9_-]+$/.test(botToken)) {
+      console.error('invalid TELEGRAM_BOT_TOKEN format');
+      return json({ error: 'server_misconfigured' }, 500, cors);
+    }
+
     let data;
     try {
       data = await request.json();
@@ -96,7 +109,12 @@ export default {
     }
 
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-    if (await rateLimited(ip)) return json({ error: 'rate_limited' }, 429, cors);
+    if (await rateLimited(ip)) {
+      return json({ error: 'rate_limited', retryAfter: RATE_WINDOW }, 429, {
+        ...cors,
+        'Retry-After': String(RATE_WINDOW),
+      });
+    }
 
     const lines = ['<b>🌙 Nueva solicitud — Amoroso Nights</b>', ''];
     for (const [key, label] of FIELDS) {
@@ -107,7 +125,7 @@ export default {
     lines.push(`Mayores de edad: ${data.adultsConfirmed ? '✅' : '❌'}`);
     lines.push(`Acepta términos: ${data.legalConfirmed ? '✅' : '❌'}`);
 
-    const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

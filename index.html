@@ -855,21 +855,29 @@ class Component extends DCLogic {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
           });
-          if (!res.ok) throw new Error('HTTP ' + res.status);
+          if (!res.ok) {
+            let body = {};
+            try { body = await res.json(); } catch (_) {}
+            const err = new Error(body.error || ('HTTP ' + res.status));
+            err.status = res.status;
+            throw err;
+          }
           form.reset();
           this.setState({ toast: 'ok' });
         } catch (err) {
           console.error('[form] envío falló:', err);
-          this.setState({ toast: 'err' });
+          this.setState({ toast: err.status === 429 ? 'rate' : 'err' });
         } finally {
           this.setState({ sending: false });
           this._t = setTimeout(() => this.setState({ toast: false }), 6000);
         }
       },
       submitLabel: this.state.sending ? 'Enviando...' : 'Solicitar propuesta privada',
-      toastText: this.state.toast === 'err'
-        ? 'No se pudo enviar. Escríbenos por WhatsApp o intenta de nuevo.'
-        : 'Solicitud enviada. Te respondemos en menos de 24 h.',
+      toastText: this.state.toast === 'rate'
+        ? 'Demasiados intentos. Espera unos minutos y vuelve a probar.'
+        : this.state.toast === 'err'
+          ? 'No se pudo enviar. Escríbenos por WhatsApp o intenta de nuevo.'
+          : 'Solicitud enviada. Te respondemos en menos de 24 h.',
       toastStyle: this.state.toast
         ? {
             ...base,
