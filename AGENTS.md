@@ -54,5 +54,5 @@ Never put `TELEGRAM_BOT_TOKEN` or `TELEGRAM_CHAT_ID` in tracked files.
 
 ## Git
 
-- Only commit when the user explicitly asks.
+- After completing and validating requested site changes, commit and push to `main` automatically unless the user explicitly says not to.
 - Do not force-push to `main`.

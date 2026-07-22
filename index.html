@@ -307,8 +307,8 @@ window.__resources = {
   <!-- HERO BANNER (full-bleed photo) -->
   <section id="top" style="position:relative; min-height:clamp(600px,90vh,880px); display:flex; align-items:flex-end; overflow:hidden; background:var(--plum,#271a22);">
     <picture class="an-photo-frame" style="position:absolute; inset:0; width:100%; height:100%;">
-      <source type="image/webp" srcset="img/amoroso-night-fotos12.webp">
-      <img src="img/amoroso-night-fotos12.jpg" width="880" height="880" loading="eager" fetchpriority="high" decoding="async" alt="">
+      <source type="image/webp" srcset="img/amoroso-night-fotos12.webp 880w, img/amoroso-nights-hero.webp 2000w" sizes="100vw">
+      <img src="img/amoroso-nights-hero.jpg" srcset="img/amoroso-night-fotos12.jpg 880w, img/amoroso-nights-hero.jpg 2000w" sizes="100vw" width="2000" height="2000" loading="eager" fetchpriority="high" decoding="async" alt="">
     </picture>
     <div style="position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(20,12,16,0.30) 0%, rgba(20,12,16,0.40) 40%, rgba(20,12,16,0.90) 100%);"></div>
     <div style="position:relative; pointer-events:none; max-width:1180px; margin:0 auto; padding:64px 24px 78px; width:100%;">
@@ -347,10 +347,6 @@ window.__resources = {
 
     <div ref="{{ galleryRef }}" class="an-scroll" style="margin-top:36px; display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px max(24px,calc((100vw - 1180px)/2 + 24px)) 22px;">
       <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
-        <source type="image/webp" srcset="img/amoroso-night-fotos12.webp">
-        <img src="img/amoroso-night-fotos12.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Novio cubierto de confeti celebrando dentro de la camioneta con sus amigos">
-      </picture>
-      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
         <source type="image/webp" srcset="img/amoroso-night-fotos7.webp">
         <img src="img/amoroso-night-fotos7.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo de amigos tomándose una selfie en el antro durante la despedida">
       </picture>
@@ -365,10 +361,6 @@ window.__resources = {
       <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
         <source type="image/webp" srcset="img/amoroso-night-fotos3.webp">
         <img src="img/amoroso-night-fotos3.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Grupo bailando y brindando en un club con luces de noche">
-      </picture>
-      <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
-        <source type="image/webp" srcset="img/amoroso-night-fotos1.webp">
-        <img src="img/amoroso-night-fotos1.jpg" width="330" height="440" loading="lazy" decoding="async" alt="Ambiente de club con gente celebrando frente al escenario">
       </picture>
       <picture class="an-photo-frame" style="flex:0 0 auto; width:330px; height:440px; scroll-snap-align:start; border-radius:12px;">
         <source type="image/webp" srcset="img/amoroso-nights-fiesta-1.webp">
