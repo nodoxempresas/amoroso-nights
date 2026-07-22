@@ -29,6 +29,8 @@ const FIELDS = [
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+const isChecked = (value) => value === true || value === 'true' || value === 'on';
+
 function corsHeaders(request, env) {
   const allowed = (env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
   const origin = request.headers.get('Origin') || '';
@@ -108,6 +110,10 @@ export default {
       return json({ error: 'missing_required_fields' }, 400, cors);
     }
 
+    if (!isChecked(data.adultsConfirmed) || !isChecked(data.legalConfirmed)) {
+      return json({ error: 'required_confirmations' }, 400, cors);
+    }
+
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
     if (await rateLimited(ip)) {
       return json({ error: 'rate_limited', retryAfter: RATE_WINDOW }, 429, {
@@ -122,8 +128,8 @@ export default {
       if (v) lines.push(`<b>${label}:</b> ${esc(v)}`);
     }
     lines.push('');
-    lines.push(`Mayores de edad: ${data.adultsConfirmed ? '✅' : '❌'}`);
-    lines.push(`Acepta términos: ${data.legalConfirmed ? '✅' : '❌'}`);
+    lines.push(`Mayores de edad: ${isChecked(data.adultsConfirmed) ? '✅' : '❌'}`);
+    lines.push(`Acepta términos: ${isChecked(data.legalConfirmed) ? '✅' : '❌'}`);
 
     const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: 'POST',

@@ -2,7 +2,27 @@
 <html><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Amoros Nights</title>
+<title>Amoroso Nights | Despedidas de soltero en México</title>
+<meta name="description" content="Rutas privadas de vida nocturna para despedidas de soltero en CDMX, Monterrey, Tijuana y otros destinos en México.">
+<meta name="theme-color" content="#0d1812">
+<link rel="canonical" href="https://amorosonights.com/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:site_name" content="Amoroso Nights">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_MX">
+<meta property="og:url" content="https://amorosonights.com/">
+<meta property="og:title" content="Amoroso Nights | Despedidas de soltero en México">
+<meta property="og:description" content="Rutas privadas de vida nocturna para despedidas de soltero en CDMX, Monterrey, Tijuana y otros destinos en México.">
+<meta property="og:image" content="https://amorosonights.com/img/amoroso-nights-social.jpg">
+<meta property="og:image:secure_url" content="https://amorosonights.com/img/amoroso-nights-social.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Grupo celebrando una despedida de soltero con Amoroso Nights">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Amoroso Nights | Despedidas de soltero en México">
+<meta name="twitter:description" content="Rutas privadas de vida nocturna para despedidas de soltero en CDMX, Monterrey, Tijuana y otros destinos en México.">
+<meta name="twitter:image" content="https://amorosonights.com/img/amoroso-nights-social.jpg">
 <!-- dc-runtime resolves these CDN urls through __resources; without it they load from unpkg. -->
 <script>
 window.__resources = {
@@ -841,6 +861,15 @@ class Component extends DCLogic {
         e.preventDefault();
         if (this.state.sending) return;
         const form = e.target;
+        const adultsBox = form.elements.adultsConfirmed;
+        const legalBox = form.elements.legalConfirmed;
+        if (!adultsBox.checked || !legalBox.checked) {
+          clearTimeout(this._t);
+          this.setState({ toast: 'confirm' });
+          (adultsBox.checked ? legalBox : adultsBox).focus();
+          this._t = setTimeout(() => this.setState({ toast: false }), 6000);
+          return;
+        }
         const fd = new FormData(form);
         const data = Object.fromEntries(fd.entries());
         // Unchecked boxes are absent from FormData; send them as real booleans.
@@ -866,7 +895,13 @@ class Component extends DCLogic {
           this.setState({ toast: 'ok' });
         } catch (err) {
           console.error('[form] envío falló:', err);
-          this.setState({ toast: err.status === 429 ? 'rate' : 'err' });
+          this.setState({
+            toast: err.status === 429
+              ? 'rate'
+              : err.message === 'required_confirmations'
+                ? 'confirm'
+                : 'err'
+          });
         } finally {
           this.setState({ sending: false });
           this._t = setTimeout(() => this.setState({ toast: false }), 6000);
@@ -875,6 +910,8 @@ class Component extends DCLogic {
       submitLabel: this.state.sending ? 'Enviando...' : 'Solicitar propuesta privada',
       toastText: this.state.toast === 'rate'
         ? 'Demasiados intentos. Espera unos minutos y vuelve a probar.'
+        : this.state.toast === 'confirm'
+          ? 'Confirma ambas casillas para poder enviar la solicitud.'
         : this.state.toast === 'err'
           ? 'No se pudo enviar. Escríbenos por WhatsApp o intenta de nuevo.'
           : 'Solicitud enviada. Te respondemos en menos de 24 h.',
