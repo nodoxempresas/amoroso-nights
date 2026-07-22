@@ -257,8 +257,19 @@ window.__resources = {
   @keyframes anGlow{0%,100%{opacity:.45;}50%{opacity:.75;}}
   ::selection{background:var(--copper,#a06a2c);color:var(--bg,#f4efe5);}
   input,select,textarea{font-family:inherit;}
-  .an-date-input{-webkit-tap-highlight-color:transparent;}
-  .an-date-input:focus{outline:none;box-shadow:none;}
+  .an-date-wrap{position:relative;}
+  .an-date-display{-webkit-tap-highlight-color:transparent;}
+  .an-date-display:focus{outline:none;box-shadow:none;}
+  .an-calendar{position:absolute;top:calc(100% + 8px);right:0;z-index:20;width:min(292px,calc(100vw - 48px));padding:14px;background:var(--card,#fbf8f1);border:1px solid rgba(36,29,24,0.14);border-radius:10px;box-shadow:0 18px 40px -20px rgba(36,29,24,0.55);}
+  .an-calendar[hidden]{display:none;}
+  .an-calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:var(--ink,#241d18);font-size:14px;font-weight:600;}
+  .an-calendar-nav{width:30px;height:30px;border:0;border-radius:6px;background:transparent;color:var(--ink-soft,#4f463d);font-size:20px;line-height:1;cursor:pointer;}
+  .an-calendar-nav:hover,.an-calendar-nav:focus-visible{background:var(--bg-warm,#efe7d8);outline:none;}
+  .an-calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;}
+  .an-calendar-grid span{padding:5px 0;color:var(--ink-faint,#8a7d6e);font-size:11px;font-weight:600;}
+  .an-calendar-grid button{height:30px;border:0;border-radius:6px;background:transparent;color:var(--ink,#241d18);font:inherit;font-size:13px;cursor:pointer;}
+  .an-calendar-grid button:hover,.an-calendar-grid button:focus-visible{background:var(--bg-warm,#efe7d8);outline:none;}
+  .an-calendar-grid button.is-today{color:var(--wine,#7d2a3a);font-weight:700;}
   .an-brand-logo{display:block; width:124px; height:70px; object-fit:contain;}
   .an-brand-logo-footer{width:154px; height:86px; padding:0; background:transparent; filter:brightness(1.45) saturate(1.08) drop-shadow(0 0 18px rgba(53,182,158,0.24));}
   .an-nav-links{display:none;}
@@ -723,8 +734,12 @@ window.__resources = {
             </sc-raw-select>
           </div>
           <div style="display:flex; flex-direction:column; gap:8px;">
-            <label for="an-date" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">Fecha tentativa</label>
-            <input id="an-date" class="an-date-input" name="date" type="text" inputmode="numeric" autocomplete="off" placeholder="DD/MM/AAAA" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%;">
+            <label for="an-date-display" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">Fecha tentativa</label>
+            <div class="an-date-wrap">
+              <input id="an-date-display" class="an-date-display" type="text" inputmode="none" autocomplete="off" readonly placeholder="DD/MM/AAAA" aria-haspopup="dialog" aria-controls="an-calendar" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%; cursor:pointer;">
+              <input id="an-date" name="date" type="hidden">
+              <div id="an-calendar" class="an-calendar" role="dialog" aria-label="Seleccionar fecha" hidden></div>
+            </div>
           </div>
         </div>
 
@@ -963,6 +978,51 @@ class Component extends DCLogic {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
   setTimeout(init, 400);
+
+  // Use an anchored calendar panel so mobile browsers do not add their own overlay.
+  function initDatePicker(){
+    var display = document.getElementById('an-date-display');
+    var value = document.getElementById('an-date');
+    var panel = document.getElementById('an-calendar');
+    if (!display || !value || !panel || panel.dataset.ready) return;
+    panel.dataset.ready = '1';
+    var view = new Date();
+    view.setDate(1);
+    var months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    var weekdays = ['LU','MA','MI','JU','VI','SA','DO'];
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function iso(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+    function format(d){ return pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear(); }
+    function render(){
+      var first = new Date(view.getFullYear(), view.getMonth(), 1);
+      var offset = (first.getDay() + 6) % 7;
+      var days = new Date(view.getFullYear(), view.getMonth()+1, 0).getDate();
+      var today = iso(new Date());
+      var html = '<div class="an-calendar-head"><button type="button" class="an-calendar-nav" data-cal="prev" aria-label="Mes anterior">‹</button><strong>' + months[view.getMonth()] + ' ' + view.getFullYear() + '</strong><button type="button" class="an-calendar-nav" data-cal="next" aria-label="Mes siguiente">›</button></div><div class="an-calendar-grid">';
+      weekdays.forEach(function(day){ html += '<span>' + day + '</span>'; });
+      for (var i=0; i<offset; i++) html += '<span aria-hidden="true"></span>';
+      for (var day=1; day<=days; day++) {
+        var d = new Date(view.getFullYear(), view.getMonth(), day);
+        html += '<button type="button" data-date="' + iso(d) + '"' + (iso(d) === today ? ' class="is-today"' : '') + '>' + day + '</button>';
+      }
+      html += '</div>';
+      panel.innerHTML = html;
+    }
+    function close(){ panel.hidden = true; display.setAttribute('aria-expanded','false'); }
+    display.setAttribute('aria-expanded','false');
+    display.addEventListener('click', function(){ panel.hidden = !panel.hidden; display.setAttribute('aria-expanded', String(!panel.hidden)); if (!panel.hidden) render(); });
+    panel.addEventListener('click', function(e){
+      var nav = e.target.closest('[data-cal]');
+      if (nav){ view.setMonth(view.getMonth() + (nav.dataset.cal === 'next' ? 1 : -1)); render(); return; }
+      var day = e.target.closest('[data-date]');
+      if (day){ var selected = new Date(day.dataset.date + 'T12:00:00'); value.value = day.dataset.date; display.value = format(selected); close(); }
+    });
+    document.addEventListener('click', function(e){ if (!panel.parentNode.contains(e.target)) close(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+    render();
+  }
+  setTimeout(initDatePicker, 450);
+  setTimeout(initDatePicker, 1000);
 
   // Auto-hide header: hide when scrolling down, reveal when scrolling up a bit
   var lastY = (window.pageYOffset || 0), ticking = false;
