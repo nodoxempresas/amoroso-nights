@@ -239,6 +239,7 @@ window.__resources = {
   input,select,textarea{font-family:inherit;}
   .an-brand-logo{display:block; width:124px; height:70px; object-fit:contain;}
   .an-brand-logo-footer{width:154px; height:86px; padding:8px 10px; border-radius:8px; background:var(--bg,#f4efe5);}
+  .an-nav-links{display:none;}
   .an-photo-frame{display:block; overflow:hidden;}
   .an-photo-frame>img{display:block; width:100%; height:100%; object-fit:cover;}
   .an-scroll::-webkit-scrollbar{height:8px;}
@@ -262,7 +263,7 @@ window.__resources = {
     /* Declutter the header: hide the inline link cluster, show the hamburger */
     header nav{padding:16px 20px !important;}
     .an-brand-logo{width:110px; height:62px;}
-    header nav [style*="gap:30px"],header nav [style*="gap: 30px"]{display:none !important;}
+    .an-nav-links,header nav [style*="gap:30px"],header nav [style*="gap: 30px"]{display:none !important;}
     #an-burger{display:flex !important;}
   }
   /* Hamburger button + full-screen mobile menu (created in JS, appended to <body>) */
@@ -272,10 +273,11 @@ window.__resources = {
   #an-burger.an-on span:nth-child(2){opacity:0;}
   #an-burger.an-on span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
   #an-menu{display:none; position:fixed; inset:0; z-index:59; background:var(--plum,#271a22); padding:104px 30px 44px; flex-direction:column; gap:2px; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  #an-menu[hidden]{display:none !important;}
   #an-menu.an-open{display:flex;}
   #an-menu a{font-family:'Newsreader',serif; font-weight:500; font-size:clamp(26px,7vw,34px); letter-spacing:-0.01em; color:var(--paper,#f7eee6); text-decoration:none; padding:14px 2px; border-bottom:1px solid rgba(231,193,120,0.16);}
   #an-menu a.an-menu-cta{margin-top:26px; border:none; border-radius:9px; background:var(--gold,#e7c178); color:var(--plum,#271a22); font-family:'Instrument Sans',system-ui,sans-serif; font-weight:600; font-size:17px; letter-spacing:0.01em; text-align:center; padding:17px;}
-  @media (min-width:769px){ #an-burger,#an-menu{display:none !important;} }
+  @media (min-width:769px){ .an-nav-links{display:flex !important;} #an-burger,#an-menu{display:none !important;} }
   /* Auto-hide header: slides away on scroll-down, reappears on scroll-up (mobile + desktop) */
   header{transition:transform .35s ease; will-change:transform;}
   html.an-hdr-hidden header{transform:translateY(-105%) !important;}
@@ -294,7 +296,7 @@ window.__resources = {
       <a href="#top" aria-label="Amoroso Nights" style="display:flex; align-items:center; text-decoration:none;">
         <img class="an-brand-logo" src="img/amoroso-nights-emerald-light.svg" alt="Amoroso Nights" decoding="async">
       </a>
-      <div style="display:flex; align-items:center; gap:30px; flex-wrap:wrap;">
+      <div class="an-nav-links" style="display:none; align-items:center; gap:30px; flex-wrap:wrap;">
         <a href="#experiencias" style="text-decoration:none; color:var(--ink-soft,#4f463d); font-size:14px; font-weight:500;">Despedidas</a>
         <a href="#galeria" style="text-decoration:none; color:var(--ink-soft,#4f463d); font-size:14px; font-weight:500;">Galería</a>
         <a href="#como-funciona" style="text-decoration:none; color:var(--ink-soft,#4f463d); font-size:14px; font-weight:500;">Cómo funciona</a>
@@ -885,6 +887,7 @@ class Component extends DCLogic {
     b.innerHTML = '<span></span><span></span><span></span>';
     var m = document.createElement('div');
     m.id = 'an-menu';
+    m.hidden = true;
     m.setAttribute('role','dialog');
     m.setAttribute('aria-label','Menú');
     m.innerHTML =
@@ -895,8 +898,8 @@ class Component extends DCLogic {
       '<a href="#solicitar" class="an-menu-cta">Arma la despedida</a>';
     document.body.appendChild(m);
     document.body.appendChild(b);
-    function open(){ document.documentElement.classList.remove('an-hdr-hidden'); m.classList.add('an-open'); b.classList.add('an-on'); b.setAttribute('aria-label','Cerrar menú'); document.body.style.overflow='hidden'; }
-    function close(){ m.classList.remove('an-open'); b.classList.remove('an-on'); b.setAttribute('aria-label','Abrir menú'); document.body.style.overflow=''; }
+    function open(){ document.documentElement.classList.remove('an-hdr-hidden'); m.hidden = false; m.classList.add('an-open'); b.classList.add('an-on'); b.setAttribute('aria-label','Cerrar menú'); document.body.style.overflow='hidden'; }
+    function close(){ m.classList.remove('an-open'); m.hidden = true; b.classList.remove('an-on'); b.setAttribute('aria-label','Abrir menú'); document.body.style.overflow=''; }
     b.addEventListener('click', function(){ m.classList.contains('an-open') ? close() : open(); });
     Array.prototype.forEach.call(m.querySelectorAll('a'), function(a){ a.addEventListener('click', close); });
     m.addEventListener('click', function(e){ if (e.target === m) close(); });
