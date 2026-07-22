@@ -257,6 +257,15 @@ window.__resources = {
   @keyframes anGlow{0%,100%{opacity:.45;}50%{opacity:.75;}}
   ::selection{background:var(--copper,#a06a2c);color:var(--bg,#f4efe5);}
   input,select,textarea{font-family:inherit;}
+  /* Keep the mobile date control from showing a translucent tap/focus layer. */
+  .an-date-input{
+    -webkit-appearance:none;
+    appearance:none;
+    color-scheme:light;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .an-date-input:focus{outline:none;box-shadow:none;}
+  .an-date-input::-webkit-calendar-picker-indicator{opacity:.72;cursor:pointer;}
   .an-brand-logo{display:block; width:124px; height:70px; object-fit:contain;}
   .an-brand-logo-footer{width:154px; height:86px; padding:0; background:transparent; filter:brightness(1.45) saturate(1.08) drop-shadow(0 0 18px rgba(53,182,158,0.24));}
   .an-nav-links{display:none;}
@@ -722,7 +731,7 @@ window.__resources = {
           </div>
           <div style="display:flex; flex-direction:column; gap:8px;">
             <label for="an-date" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">Fecha tentativa</label>
-            <input id="an-date" name="date" type="date" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:12px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%;">
+            <input id="an-date" class="an-date-input" name="date" type="date" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:12px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%;">
           </div>
         </div>
 
