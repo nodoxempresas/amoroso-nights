@@ -238,6 +238,8 @@ window.__resources = {
   @keyframes anGlow{0%,100%{opacity:.45;}50%{opacity:.75;}}
   ::selection{background:var(--copper,#a06a2c);color:var(--bg,#f4efe5);}
   input,select,textarea{font-family:inherit;}
+  .an-brand-logo{display:block; width:124px; height:70px; object-fit:contain;}
+  .an-brand-logo-footer{width:154px; height:86px; padding:8px 10px; border-radius:8px; background:var(--bg,#f4efe5);}
   .an-scroll::-webkit-scrollbar{height:8px;}
   .an-scroll::-webkit-scrollbar-thumb{background:rgba(36,29,24,0.2);border-radius:99px;}
   .an-scroll::-webkit-scrollbar-track{background:transparent;}
@@ -258,6 +260,7 @@ window.__resources = {
     [style*="8px 24px 104px"]{padding:8px 20px 64px !important;}
     /* Declutter the header: hide the inline link cluster, show the hamburger */
     header nav{padding:16px 20px !important;}
+    .an-brand-logo{width:110px; height:62px;}
     header nav [style*="gap:30px"],header nav [style*="gap: 30px"]{display:none !important;}
     #an-burger{display:flex !important;}
   }
@@ -287,12 +290,8 @@ window.__resources = {
   <!-- NAV -->
   <header style="position:sticky; top:0; z-index:50; background:rgba(244,239,229,0.88); backdrop-filter:blur(14px); border-bottom:1px solid rgba(36,29,24,0.1);">
     <nav style="max-width:1180px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;">
-      <a href="#top" style="display:flex; align-items:center; gap:13px; text-decoration:none;">
-        <span style="width:42px; height:42px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif; font-weight:500; font-size:19px; color:var(--bg,#f4efe5); background:var(--plum,#271a22);">AN</span>
-        <span style="display:flex; flex-direction:column; line-height:1.1;">
-          <strong style="font-family:'Newsreader',serif; font-weight:500; font-size:19px; letter-spacing:0.01em; color:var(--ink,#241d18);">Amoroso Nights</strong>
-          <small style="font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color:var(--copper,#a06a2c);">by Mexico Amoroso</small>
-        </span>
+      <a href="#top" aria-label="Amoroso Nights" style="display:flex; align-items:center; text-decoration:none;">
+        <img class="an-brand-logo" src="img/amoroso-nights-emerald-light.svg" alt="Amoroso Nights" decoding="async">
       </a>
       <div style="display:flex; align-items:center; gap:30px; flex-wrap:wrap;">
         <a href="#experiencias" style="text-decoration:none; color:var(--ink-soft,#4f463d); font-size:14px; font-weight:500;">Despedidas</a>
@@ -681,12 +680,8 @@ window.__resources = {
   <!-- FOOTER -->
   <footer style="background:var(--plum-deep,#1c1610); padding:52px 24px;">
     <div style="max-width:1180px; margin:0 auto; display:grid; grid-template-columns:1.2fr 1fr 0.8fr; gap:32px; align-items:center;">
-      <a href="#top" style="display:flex; align-items:center; gap:13px; text-decoration:none;">
-        <span style="width:42px; height:42px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif; font-weight:500; font-size:19px; color:var(--plum-deep,#1c1610); background:var(--gold,#e7c178);">AN</span>
-        <span style="display:flex; flex-direction:column; line-height:1.1;">
-          <strong style="font-family:'Newsreader',serif; font-weight:500; font-size:18px; color:var(--paper,#f5ece4);">Amoroso Nights</strong>
-          <small style="font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color:var(--on-dark-dim,#a08a6a);">by Mexico Amoroso</small>
-        </span>
+      <a href="#top" aria-label="Amoroso Nights" style="display:flex; align-items:center; text-decoration:none;">
+        <img class="an-brand-logo an-brand-logo-footer" src="img/amoroso-nights-emerald-light.svg" alt="Amoroso Nights" loading="lazy" decoding="async">
       </a>
       <div>
         <p style="margin:0 0 6px; font-size:14px; color:var(--on-dark-dim,#c9bcae);">Despedidas de soltero y experiencias nocturnas privadas para adultos en México.</p>
