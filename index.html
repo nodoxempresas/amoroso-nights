@@ -710,8 +710,8 @@ window.__resources = {
 
       <form sc-camel-on-submit="{{ onSubmit }}" novalidate="" style="border:1px solid rgba(36,29,24,0.1); border-radius:14px; background:var(--card,#fbf8f1); padding:clamp(26px,3vw,40px); display:flex; flex-direction:column; gap:18px; box-shadow:0 40px 80px -50px rgba(36,29,24,0.5);">
         <div style="display:flex; flex-direction:column; gap:8px;">
-          <label for="an-name" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">Nombre</label>
-          <input id="an-name" name="name" type="text" minlength="2" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü .'-]{2,80}" placeholder="Tu nombre" required="" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none;" style-focus="border:1px solid var(--copper,#a06a2c);">
+          <label for="an-name" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">Nombre completo</label>
+          <input id="an-name" name="name" type="text" minlength="5" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñÜü .'-]{5,80}" placeholder="Tu nombre y apellido" required="" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none;" style-focus="border:1px solid var(--copper,#a06a2c);">
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
@@ -906,7 +906,7 @@ class Component extends DCLogic {
         const emailValue = String(form.elements.email.value || '').trim();
         const sizeValue = Number(form.elements.groupSize.value);
         const avoidWords = String(form.elements.avoid.value || '').trim().split(/\s+/).filter(Boolean);
-        if (nameValue && !/^[\p{L}][\p{L} .'-]{1,79}$/u.test(nameValue)) invalid.push('Nombre: usa letras y espacios');
+        if (nameValue && (!/^[\p{L}][\p{L} .'-]{4,79}$/u.test(nameValue) || nameValue.split(/\s+/).filter(Boolean).length < 2)) invalid.push('Nombre completo: escribe nombre y apellido');
         if (phoneValue && !/^\d{7,15}$/.test(phoneValue)) invalid.push('WhatsApp: escribe un número válido');
         if (emailValue && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailValue)) invalid.push('Email: escribe un correo válido');
         if (form.elements.groupSize.value && (!Number.isInteger(sizeValue) || sizeValue < 2 || sizeValue > 100)) invalid.push('Número de personas: mínimo 2');

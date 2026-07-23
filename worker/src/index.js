@@ -116,7 +116,8 @@ export default {
     }
 
     const invalidFields = [];
-    if (!/^[\p{L}][\p{L} .'-]{1,79}$/u.test(String(data.name).trim())) invalidFields.push('Nombre');
+    const name = String(data.name).trim();
+    if (!/^[\p{L}][\p{L} .'-]{4,79}$/u.test(name) || name.split(/\s+/).filter(Boolean).length < 2) invalidFields.push('Nombre completo');
     if (!/^\d{7,15}$/.test(normalizedPhone(data.whatsapp))) invalidFields.push('WhatsApp');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(data.email).trim())) invalidFields.push('Email');
     const groupSize = Number(data.groupSize);
