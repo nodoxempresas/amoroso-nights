@@ -708,7 +708,7 @@ window.__resources = {
         </div>
       </div>
 
-      <form sc-camel-on-submit="{{ onSubmit }}" style="border:1px solid rgba(36,29,24,0.1); border-radius:14px; background:var(--card,#fbf8f1); padding:clamp(26px,3vw,40px); display:flex; flex-direction:column; gap:18px; box-shadow:0 40px 80px -50px rgba(36,29,24,0.5);">
+      <form sc-camel-on-submit="{{ onSubmit }}" novalidate="" style="border:1px solid rgba(36,29,24,0.1); border-radius:14px; background:var(--card,#fbf8f1); padding:clamp(26px,3vw,40px); display:flex; flex-direction:column; gap:18px; box-shadow:0 40px 80px -50px rgba(36,29,24,0.5);">
         <div style="display:flex; flex-direction:column; gap:8px;">
           <label for="an-name" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">Nombre</label>
           <input id="an-name" name="name" type="text" placeholder="Tu nombre" required="" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none;" style-focus="border:1px solid var(--copper,#a06a2c);">
@@ -721,7 +721,7 @@ window.__resources = {
           </div>
           <div style="display:flex; flex-direction:column; gap:8px;">
             <label for="an-email" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">Email</label>
-            <input id="an-email" name="email" type="email" placeholder="tucorreo@email.com" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%;" style-focus="border:1px solid var(--copper,#a06a2c);">
+            <input id="an-email" name="email" type="email" placeholder="tucorreo@email.com" required="" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%;" style-focus="border:1px solid var(--copper,#a06a2c);">
           </div>
         </div>
 
@@ -736,7 +736,7 @@ window.__resources = {
           <div style="display:flex; flex-direction:column; gap:8px;">
             <label for="an-date-display" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">Fecha tentativa</label>
             <div class="an-date-wrap">
-              <input id="an-date-display" class="an-date-display" type="text" inputmode="none" autocomplete="off" readonly placeholder="DD/MM/AAAA" aria-haspopup="dialog" aria-controls="an-calendar" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%; cursor:pointer;">
+              <input id="an-date-display" class="an-date-display" type="text" inputmode="none" autocomplete="off" readonly required="" placeholder="DD/MM/AAAA" aria-haspopup="dialog" aria-controls="an-calendar" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%; cursor:pointer;">
               <input id="an-date" name="date" type="hidden">
               <div id="an-calendar" class="an-calendar" role="dialog" aria-label="Seleccionar fecha" hidden></div>
             </div>
@@ -746,26 +746,26 @@ window.__resources = {
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
           <div style="display:flex; flex-direction:column; gap:8px;">
             <label for="an-size" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">Número de personas</label>
-            <input id="an-size" name="groupSize" type="number" min="2" placeholder="Ej. 8" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%;">
+            <input id="an-size" name="groupSize" type="number" min="2" placeholder="Ej. 8" required="" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%;">
           </div>
           <div style="display:flex; flex-direction:column; gap:8px;">
             <label for="an-occ" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">Motivo</label>
-            <sc-raw-select id="an-occ" name="occasion" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%;">
-              <option>Despedida de soltero</option><option>Cumpleaños</option><option>Viaje de amigos</option><option>Otro</option>
+            <sc-raw-select id="an-occ" name="occasion" required="" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; width:100%;">
+              <option value="">Selecciona</option><option>Despedida de soltero</option><option>Cumpleaños</option><option>Viaje de amigos</option><option>Otro</option>
             </sc-raw-select>
           </div>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:8px;">
           <label for="an-vibe" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">Estilo de noche</label>
-          <sc-raw-select id="an-vibe" name="vibe" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none;">
-            <option>Elegante</option><option>Salvaje</option><option>Premium</option><option>Discreta</option><option>Table dance</option><option>Antro</option><option>Cena y after</option>
+          <sc-raw-select id="an-vibe" name="vibe" required="" style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none;">
+            <option value="">Selecciona</option><option>Elegante</option><option>Salvaje</option><option>Premium</option><option>Discreta</option><option>Table dance</option><option>Antro</option><option>Cena y after</option>
           </sc-raw-select>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:8px;">
           <label for="an-avoid" style="font-size:13px; font-weight:600; color:var(--ink-soft,#4f463d);">¿Qué quieren evitar?</label>
-          <textarea id="an-avoid" name="avoid" rows="3" placeholder="Ej. zonas inseguras, lugares vacíos, filas, traslados largos..." style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; resize:vertical; font-family:inherit;"></textarea>
+          <textarea id="an-avoid" name="avoid" rows="3" required="" placeholder="Ej. zonas inseguras, lugares vacíos, filas, traslados largos..." style="background:#fff; border:1px solid rgba(36,29,24,0.18); border-radius:7px; padding:13px 14px; color:var(--ink,#241d18); font-size:15px; outline:none; resize:vertical; font-family:inherit;"></textarea>
         </div>
 
         <label style="display:flex; gap:11px; align-items:flex-start; font-size:13.5px; color:var(--ink-mute,#6f655a); line-height:1.45; cursor:pointer;">
@@ -817,7 +817,7 @@ class Component extends DCLogic {
   // Replace <TU-SUBDOMINIO> with the value `wrangler deploy` prints.
   static FORM_ENDPOINT = 'https://amoroso-nights-form.amoroso-nights.workers.dev';
 
-  state = { toast: false, sending: false };
+  state = { toast: false, sending: false, missingFields: '' };
   galleryRef = React.createRef();
 
   static PALETTES = {
@@ -880,10 +880,25 @@ class Component extends DCLogic {
         const form = e.target;
         const adultsBox = form.elements.adultsConfirmed;
         const legalBox = form.elements.legalConfirmed;
-        if (!adultsBox.checked || !legalBox.checked) {
+        const required = [
+          [form.elements.name, 'Nombre'],
+          [form.elements.whatsapp, 'WhatsApp'],
+          [form.elements.email, 'Email'],
+          [form.elements.city, 'Ciudad donde quieren salir'],
+          [document.getElementById('an-date-display'), 'Fecha tentativa'],
+          [form.elements.groupSize, 'Número de personas'],
+          [form.elements.occasion, 'Motivo'],
+          [form.elements.vibe, 'Estilo de noche'],
+          [form.elements.avoid, 'Qué quieren evitar'],
+          [adultsBox, 'Confirmación de mayores de edad'],
+          [legalBox, 'Aceptación de condiciones']
+        ];
+        const missing = required.filter(([field]) => !field || (field.type === 'checkbox' ? !field.checked : !String(field.value || '').trim())).map(([, label]) => label);
+        if (missing.length) {
           clearTimeout(this._t);
-          this.setState({ toast: 'confirm' });
-          (adultsBox.checked ? legalBox : adultsBox).focus();
+          this.setState({ toast: 'missing', missingFields: missing.join(', ') });
+          const firstMissing = required.find(([field]) => !field || (field.type === 'checkbox' ? !field.checked : !String(field.value || '').trim()));
+          if (firstMissing && firstMissing[0] && typeof firstMissing[0].focus === 'function') firstMissing[0].focus();
           this._t = setTimeout(() => this.setState({ toast: false }), 6000);
           return;
         }
@@ -906,18 +921,22 @@ class Component extends DCLogic {
             try { body = await res.json(); } catch (_) {}
             const err = new Error(body.error || ('HTTP ' + res.status));
             err.status = res.status;
+            err.missingFields = body.missing_fields || [];
             throw err;
           }
           form.reset();
-          this.setState({ toast: 'ok' });
+          this.setState({ toast: 'ok', missingFields: '' });
         } catch (err) {
           console.error('[form] envío falló:', err);
           this.setState({
             toast: err.status === 429
               ? 'rate'
-              : err.message === 'required_confirmations'
-                ? 'confirm'
-                : 'err'
+              : err.message === 'missing_required_fields'
+                ? 'missing'
+                : err.message === 'required_confirmations'
+                  ? 'missing'
+                  : 'err',
+            missingFields: err.missingFields ? err.missingFields.join(', ') : 'campos requeridos'
           });
         } finally {
           this.setState({ sending: false });
@@ -927,8 +946,8 @@ class Component extends DCLogic {
       submitLabel: this.state.sending ? 'Enviando...' : 'Solicitar propuesta privada',
       toastText: this.state.toast === 'rate'
         ? 'Demasiados intentos. Espera unos minutos y vuelve a probar.'
-        : this.state.toast === 'confirm'
-          ? 'Confirma ambas casillas para poder enviar la solicitud.'
+        : this.state.toast === 'missing'
+          ? 'Falta completar: ' + (this.state.missingFields || 'campos requeridos') + '.'
         : this.state.toast === 'err'
           ? 'No se pudo enviar. Escríbenos por WhatsApp o intenta de nuevo.'
           : 'Solicitud enviada. Te respondemos en menos de 24 h.',

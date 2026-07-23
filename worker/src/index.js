@@ -106,8 +106,11 @@ export default {
     // has no signal to retry against.
     if (data.website) return json({ ok: true }, 200, cors);
 
-    if (!data.name || !data.whatsapp || !data.city) {
-      return json({ error: 'missing_required_fields' }, 400, cors);
+    const missingFields = FIELDS
+      .filter(([key]) => !String(data[key] ?? '').trim())
+      .map(([, label]) => label);
+    if (missingFields.length) {
+      return json({ error: 'missing_required_fields', missing_fields: missingFields }, 400, cors);
     }
 
     if (!isChecked(data.adultsConfirmed) || !isChecked(data.legalConfirmed)) {
