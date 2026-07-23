@@ -30,6 +30,8 @@ const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const isChecked = (value) => value === true || value === 'true' || value === 'on';
+const normalizedPhone = (value) => String(value || '').replace(/[\s()-]/g, '');
+const countWords = (value) => String(value || '').trim().split(/\s+/).filter(Boolean).length;
 
 function corsHeaders(request, env) {
   const allowed = (env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
@@ -111,6 +113,17 @@ export default {
       .map(([, label]) => label);
     if (missingFields.length) {
       return json({ error: 'missing_required_fields', missing_fields: missingFields }, 400, cors);
+    }
+
+    const invalidFields = [];
+    if (!/^[\p{L}][\p{L} .'-]{1,79}$/u.test(String(data.name).trim())) invalidFields.push('Nombre');
+    if (!/^\d{7,15}$/.test(normalizedPhone(data.whatsapp))) invalidFields.push('WhatsApp');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(data.email).trim())) invalidFields.push('Email');
+    const groupSize = Number(data.groupSize);
+    if (!Number.isInteger(groupSize) || groupSize < 2 || groupSize > 100) invalidFields.push('Número de personas');
+    if (countWords(data.avoid) < 2) invalidFields.push('Solicitudes especiales o comentarios');
+    if (invalidFields.length) {
+      return json({ error: 'invalid_fields', invalid_fields: invalidFields }, 400, cors);
     }
 
     if (!isChecked(data.adultsConfirmed) || !isChecked(data.legalConfirmed)) {
